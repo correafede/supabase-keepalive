@@ -41,6 +41,29 @@ and GitHub often delays or skips scheduled runs, hence every 4 hours.
 3. Actions tab → **Supabase keep-alive** → **Run workflow** to test. Both steps
    should print `HTTP 200`.
 
+## Auto-restore if paused
+
+If the `SUPABASE_ACCESS_TOKEN` secret is set, every run first checks the
+project's status through the Supabase Management API. If the project is paused,
+it calls `POST /v1/projects/{ref}/restore`, waits until the project is healthy,
+and then pings as usual. So a pause lasts at most about 4 hours.
+
+To turn it on:
+
+1. Create a personal access token at
+   https://supabase.com/dashboard/account/tokens (name it e.g. `github-keepalive`).
+2. Add it as a repo secret named `SUPABASE_ACCESS_TOKEN`:
+
+   ```bash
+   gh secret set SUPABASE_ACCESS_TOKEN -R correafede/supabase-keepalive
+   ```
+
+   (paste the token when asked).
+
+The token has full access to your Supabase account, so keep it only as a
+secret. The workflow never prints it, and secrets are not passed to workflows
+triggered by pull requests from forks.
+
 ## Notes
 
 - GitHub disables scheduled workflows after 60 days with no commits in the repo.
