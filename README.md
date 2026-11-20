@@ -1,14 +1,16 @@
 # Supabase keep-alive
 
 Keeps the free Supabase project **EcoGas App** (`rovsbafnldavsewobdoa`) from being
-paused for inactivity. A GitHub Actions job runs **every day** and:
+paused for inactivity. A GitHub Actions job runs **every 4 hours** (6 times a day) and:
 
 1. reads one row from the `keepalive` table, and
 2. calls the `keepalive_ping()` database function, which writes the current
    time to that row (`last_ping`) and returns it.
 
-A read every 3 days was not enough: Supabase paused the project on 2026-11-16
-even though every ping had succeeded.
+A read every 3 days was not enough (paused 2026-11-16), and neither was a read
+and write once a day (paused 2026-11-20). Supabase's docs say "a few user
+requests to the database each day over the previous week" is typically enough,
+and GitHub often delays or skips scheduled runs, hence every 4 hours.
 
 ## Setup
 

@@ -2,8 +2,10 @@
 #
 # Supabase pauses free projects that haven't seen "sufficient activity" for
 # ~7 days. A single read every 3 days turned out not to be enough (the project
-# was paused on 2026-11-16 despite successful pings), so this now runs daily
-# and does both a read and a write.
+# was paused on 2026-11-16 despite successful pings), and once a day wasn't
+# either (paused again on 2026-11-20). Supabase wants "a few user requests to
+# the database each day", so this now runs every 4 hours and does both a read
+# and a write.
 #
 # It also commits a heartbeat file when the repo has had no commit for 25+
 # days, because GitHub disables scheduled workflows in repos with no activity
@@ -19,7 +21,7 @@ name: Supabase keep-alive
 
 on:
   schedule:
-    - cron: "17 12 * * *" # every day at 12:17 UTC
+    - cron: "17 */4 * * *" # every 4 hours (6 times a day)
   workflow_dispatch: # allows a manual run from the Actions tab
 
 permissions:
