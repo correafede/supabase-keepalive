@@ -98,7 +98,7 @@ jobs:
           echo "HTTP $status"; cat response.json; echo
           [ "$status" = "200" ] || { echo "::error::Write ping failed"; exit 1; }
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Heartbeat commit (keeps the schedule from being disabled)
         run: |
